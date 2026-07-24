@@ -1,0 +1,26 @@
+name: Deploy backend to Render (trigger)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  trigger-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Trigger Render deploy
+        if: ${{ secrets.RENDER_API_KEY && secrets.RENDER_SERVICE_ID }}
+        run: |
+          echo "Triggering Render deploy for service $RENDER_SERVICE_ID"
+          curl -s -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"clearCache":true}'
+
+      - name: Fail if secrets missing
+        if: ${{ !secrets.RENDER_API_KEY || !secrets.RENDER_SERVICE_ID }}
+        run: |
+          echo "Required Render secrets (RENDER_API_KEY, RENDER_SERVICE_ID) are not set." && exit 1
