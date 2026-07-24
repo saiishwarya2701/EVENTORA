@@ -1,11 +1,11 @@
-name: Frontend CI & Deploy
+name: Fullstack CI & Deploy
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
+  frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,9 +30,47 @@ jobs:
         with:
           path: ./client/dist
 
-  deploy:
-    needs: build
+  deploy-frontend:
+    needs: frontend
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
+
+  deploy-backend:
+    needs: frontend
+    runs-on: ubuntu-latest
+    if: ${{ secrets.RENDER_API_KEY && secrets.RENDER_SERVICE_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js for backend validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies (server)
+        working-directory: ./server
+        run: npm ci
+
+      - name: Trigger Render deploy
+        run: |
+          echo "Triggering Render deploy for service $RENDER_SERVICE_ID"
+          curl -s -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"clearCache":true}'
+
+  backend-secrets-check:
+    needs: frontend
+    runs-on: ubuntu-latest
+    if: ${{ !secrets.RENDER_API_KEY || !secrets.RENDER_SERVICE_ID }}
+    steps:
+      - name: Backend deploy skipped
+        run: |
+          echo "Render backend deploy was skipped because RENDER_API_KEY or RENDER_SERVICE_ID is not configured."
+          echo "Set both repository secrets to deploy backend automatically."

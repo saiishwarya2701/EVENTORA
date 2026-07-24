@@ -1,10 +1,10 @@
 Deployment guide
 ================
 
-This repository contains a Vite React frontend (`client/`) and an Express backend (`server/`). The GitHub Actions workflows provided will run CI and optionally deploy the frontend to GitHub Pages and the backend to Heroku.
+This repository contains a Vite React frontend (`client/`) and an Express backend (`server/`). The GitHub Actions workflows provided now run a combined fullstack deployment: frontend to GitHub Pages and backend to Render.
 
 What I added
-- `.github/workflows/frontend-deploy.yml` — builds `client` and deploys to GitHub Pages.
+- `.github/workflows/frontend-deploy.yml` — builds `client`, deploys to GitHub Pages, and triggers a backend redeploy on Render when Render secrets are configured.
 - `.github/workflows/backend-ci-deploy.yml` — installs server deps and will deploy to Heroku if Heroku secrets are configured.
 
 Quick setup
