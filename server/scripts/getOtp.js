@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const OTP = require('../models/Otp');
+const OTP = require('../models/otp');
 
 dotenv.config();
 

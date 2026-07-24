@@ -6,4 +6,8 @@ export default defineConfig({
   plugins: [
     react(),
   ],
+  build: {
+    // disable CSS minification to avoid lightningcss parsing errors in CI/local
+    cssMinify: false,
+  },
 })

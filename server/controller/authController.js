@@ -10,12 +10,6 @@ const generateToken=(id,role)=>{
 }
 
 
-
-
-
-
-
-
 //Register User
 const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
@@ -86,8 +80,7 @@ exports.verifyOtp=async(req,res)=>{
     if (!otpRecord) {
         return res.status(400).json({ message: 'Invalid or expired OTP' });
     }
-    const user = await User.findOne({ email });
-    await User.findOneAndUpdate({ email }, { isVerified: true });
+    const user=await User.findOneAndUpdate({ email }, { isVerified: true });
     await OTP.deleteMany({ email, action: 'account_verification' }); // Delete the OTP after successful verification
     res.json({ 
         message: 'Account verified successfully',

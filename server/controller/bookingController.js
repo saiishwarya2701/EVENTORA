@@ -1,7 +1,7 @@
 const Booking=require('../models/Bookings.js');
 const Event=require('../models/Event');
 const User=require('../models/User');
-const OTP=require('../models/Otp');
+const OTP=require('../models/otp');
 const {sendOtpEmail,sendBookingEmail}=require('../utils/email');
 
 const generateOtp=()=>{
