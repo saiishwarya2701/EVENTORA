@@ -1,4 +1,5 @@
 const mongoose=require('mongoose');
+
 const otpSchema=new mongoose.Schema({
     email:{
         type:String,
@@ -19,4 +20,5 @@ const otpSchema=new mongoose.Schema({
         expires:300, // OTP expires after 5 minutes
     }
 });
+
 module.exports=mongoose.models.OTP || mongoose.model('OTP',otpSchema);
