@@ -9,7 +9,13 @@ const bookingRoutes=require('./routes/bookings');
 dotenv.config();
 dns.setServers(['1.1.1.1','8.8.8.8']);
 const app=express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://saiishwarya2701.github.io',
+    'http://localhost:5173',
+  ],
+  credentials: true,
+}));
 app.use(express.json());
 //Routes
 app.use('/api/auth',authRoutes);
