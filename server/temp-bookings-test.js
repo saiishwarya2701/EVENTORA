@@ -1,0 +1,1 @@
+const express = require("express"); const app = express(); const router = require("./routes/bookings.js"); app.use(express.json()); app.use("/api/bookings", router); app.listen(5001, () => console.log("temp server listening 5001"));

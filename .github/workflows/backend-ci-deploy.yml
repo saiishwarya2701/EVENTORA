@@ -1,0 +1,42 @@
+name: Backend CI & Optional Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies (server)
+        working-directory: ./server
+        run: npm ci
+
+      - name: Run lint/tests (if any)
+        working-directory: ./server
+        run: |
+          echo "No tests configured; add test script to package.json to run tests here."
+
+  deploy-heroku:
+    needs: build
+    if: ${{ secrets.HEROKU_API_KEY && secrets.HEROKU_APP_NAME && secrets.HEROKU_EMAIL }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to Heroku (optional)
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          app_name: ${{ secrets.HEROKU_APP_NAME }}
+          procfile: ""
