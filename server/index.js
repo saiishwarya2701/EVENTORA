@@ -2,6 +2,8 @@ const express=require('express');
 const dotenv=require('dotenv');
 const cors = require('cors');
 const dns=require('dns');
+const fs = require('fs');
+const path = require('path');
 const mongoose=require('mongoose');
 const authRoutes=require('./routes/auth');
 const eventRoutes=require('./routes/events');
@@ -17,12 +19,26 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
-//Routes
+
+// API routes
 app.use('/api/auth',authRoutes);
 app.use('/api/events',eventRoutes);
 app.use('/api/bookings',bookingRoutes);
 
-//Connect to mongodb
+// Serve React frontend from client/dist when available
+const clientBuildPath = path.join(__dirname, '../client/dist');
+if (fs.existsSync(clientBuildPath)) {
+  app.use(express.static(clientBuildPath));
+
+  app.get('*', (req, res) => {
+    if (req.path.startsWith('/api')) {
+      return res.status(404).json({ error: 'API route not found' });
+    }
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+}
+
+// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
 .then(()=>{
     console.log('Connected to MongoDB');

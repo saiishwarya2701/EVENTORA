@@ -18,6 +18,14 @@ Quick setup
 
 4. Backend deploy (Heroku): if you set the Heroku secrets, the `backend-ci-deploy` workflow will run and push to Heroku.
 
+5. Backend deploy (Render, one service): you can host both frontend and backend in a single Render service if the backend serves the built React app from `client/dist`.
+   - Configure Render to use this repository root.
+   - Set the build command to:
+     `npm run build`
+   - Set the start command to:
+     `npm run start`
+   - Provide required environment variables such as `MONGODB_URI`, `JWT_SECRET`, `EMAIL_USER`, and `EMAIL_PASS`.
+
 Notes & next steps
 - If you prefer Render, Vercel, or another host for the backend, I can update the workflow to use Render's API or Vercel CLI.
 - Add test scripts to `server/package.json` to run automated tests in CI.
