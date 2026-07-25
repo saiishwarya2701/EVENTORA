@@ -4,7 +4,7 @@
   "scripts": {
     "build:client": "npm --prefix client ci && npm --prefix client run build",
     "build:server": "npm --prefix server ci",
-    "build": "npm run build:client && npm run build:server",
+    "build": "npm run build:client",
     "start": "npm --prefix server start"
   },
   "engines": {

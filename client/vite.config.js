@@ -3,8 +3,8 @@ import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // GitHub Pages serves this repository beneath /EVENTORA/.
-  base: '/EVENTORA/',
+  // GitHub Pages uses /EVENTORA/; Vercel serves from domain root.
+  base: process.env.VERCEL ? '/' : '/EVENTORA/',
   plugins: [
     react(),
   ],
