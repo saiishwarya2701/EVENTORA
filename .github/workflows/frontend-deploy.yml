@@ -34,6 +34,10 @@ jobs:
         working-directory: ./client
         run: npm run build
 
+      - name: Add SPA fallback for GitHub Pages
+        working-directory: ./client/dist
+        run: cp index.html 404.html
+
       - name: Upload built site
         uses: actions/upload-pages-artifact@v3
         with:
@@ -42,6 +46,9 @@ jobs:
   deploy-frontend:
     needs: frontend
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

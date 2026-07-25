@@ -11,7 +11,7 @@ import PaymentFailed from './pages/PaymentFailed';
 
 function App() {
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL.replace(/\/$/, '') || undefined}>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
